@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from functools import cached_property
+from os import PathLike
 from typing import Any, Optional
+from urllib.parse import quote
 
 import requests
 import requests_unixsocket
@@ -74,16 +76,16 @@ class ServerRenderer(SSRRenderer):
 class SocketServerRenderer(ServerRenderer):
     """Connect to a vue-ssr-service server via a UNIX socket."""
 
-    def __init__(self, socket: str):
+    def __init__(self, socket: PathLike | str):
         """
         :param socket: The path to the Unix socket.
         """
-        self.unix_socket = socket
+        self.unix_socket = str(socket)
         self._session = requests_unixsocket.Session()
 
     @cached_property
     def address(self) -> str:
-        return f"http+unix://{self.unix_socket}"
+        return f"http+unix://{quote(self.unix_socket, safe='')}"
 
 
 class ViteRenderer(SSRRenderer):
