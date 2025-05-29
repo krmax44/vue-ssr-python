@@ -10,8 +10,8 @@ dependencies = ["requests>=2.0.0", "requests-unixsocket>=0.4.1"]
 requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["vue_ssr"]
+[tool.setuptools.packages.find]
+include = ["vue_ssr*"]
 
 [tool.ruff.lint]
 extend-select = ["I001"]

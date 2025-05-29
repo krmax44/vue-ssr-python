@@ -7,7 +7,6 @@ from django.utils.safestring import mark_safe
 from ..services import render
 
 register = template.Library()
-"""@private"""
 
 
 @register.simple_tag

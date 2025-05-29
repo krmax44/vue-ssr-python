@@ -6,4 +6,5 @@ __all__ = [
     "ViteRenderer",
     "settings",
     "apps",
+    "templatetags",
 ]
