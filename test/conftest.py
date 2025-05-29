@@ -74,6 +74,7 @@ class VueSSRServer:
     def __init__(
         self,
         manifest: str,
+        command: list[str],
         cwd=settings.FRONTEND_DIR,
         port=22634,
         socket: str | None = None,
@@ -82,18 +83,19 @@ class VueSSRServer:
         self.cwd = cwd
         self.port = str(port)
         self.socket = socket
+        self.command = command
 
     def start(self):
         """
         Start the Vite dev server.
         """
 
-        args = ["pnpm", "exec", "vue-ssr-service"]
+        args = list(self.command)
 
         if self.socket:
             args += ["--socket", self.socket]
         else:
-            args += ["--port", self.port, "--host", "localhost"]
+            args += ["--port", self.port]
 
         args += [self.manifest]
 
@@ -105,7 +107,8 @@ class VueSSRServer:
 
         while True:
             line = self.process.stdout.readline()
-            print(line)
+            if line:
+                print(line)
             if b"Server running" in line:
                 print("Vue SSR server started")
                 break
@@ -130,27 +133,36 @@ def vite_dev_server():
     server.stop()
 
 
-@pytest.fixture()
-def vue_ssr_server():
+COMMANDS = [["pnpm", "exec", "vue-ssr-service"], ["bun", "run", "vue-ssr-service"]]
+
+
+@pytest.fixture(params=COMMANDS)
+def vue_ssr_server(request):
     """
     Fixture to start and stop the Vue SSR server.
     """
-    server = VueSSRServer(settings.FRONTEND_DIR / "dist" / "server" / "manifest.json")
+    server = VueSSRServer(
+        str(settings.FRONTEND_DIR / "dist" / "server" / "manifest.json"),
+        command=request.param,
+    )
     server.start()
     yield server
     server.stop()
 
 
-@pytest.fixture()
-def vue_ssr_socket_server():
+@pytest.fixture(params=COMMANDS)
+def vue_ssr_socket_server(request):
     """
     Fixture to start and stop the Vue SSR server with a socket.
     """
-    socket = str(Path("foo.sock").resolve())
+    runtime = request.param[0]
+    socket = str(Path(f"test-socket-{runtime}.sock").resolve())
     server = VueSSRServer(
-        settings.FRONTEND_DIR / "dist" / "server" / "manifest.json", socket=socket
+        str(settings.FRONTEND_DIR / "dist" / "server" / "manifest.json"),
+        command=request.param,
+        socket=socket,
     )
     server.start()
-    yield server
+    yield server, socket
     server.stop()
     os.remove(socket)

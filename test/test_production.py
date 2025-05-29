@@ -15,7 +15,8 @@ def test_server_running(client, vue_ssr_server, production):
 
 
 def test_socket_server_running(client, settings, vue_ssr_socket_server, production):
-    settings.VUE_SSR = {"socket": "foo.sock"}
+    _server, socket = vue_ssr_socket_server
+    settings.VUE_SSR = {"socket": socket}
     setup_renderer()
 
     r = client.get("/")
