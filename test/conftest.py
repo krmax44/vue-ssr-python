@@ -95,7 +95,7 @@ class VueSSRServer:
         if self.socket:
             args += ["--socket", self.socket]
         else:
-            args += ["--port", self.port]
+            args += ["--port", self.port, "--host", "localhost"]
 
         args += [self.manifest]
 
