@@ -1,6 +1,14 @@
 # Vue Server-Side Rendering in Python
 
+[![Test Workflow](https://github.com/krmax44/vue-ssr-python/actions/workflows/test.yaml/badge.svg)](https://github.com/krmax44/vue-ssr-python/actions/workflows/test.yaml)
+[![PyPI - Version](https://img.shields.io/pypi/v/vue-ssr)](https://pypi.org/project/vue-ssr/)
+[![API documentation](https://img.shields.io/badge/-api%20docs-blue)](https://krmax44.github.io/vue-ssr-python/vue_ssr.html)
+
+
 Client for [`vue-ssr-service`](https://github.com/krmax44/vue-ssr-service). See its documentation for a [quick start guide](https://github.com/krmax44/vue-ssr-service#getting-started-with-vite).
+
+> [!WARNING]
+> This project is in a proof-of-concept state.
 
 ## Stand-alone
 
